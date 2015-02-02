@@ -27,9 +27,7 @@ package
 	import com.kurst.loadtest.view.SWFLoaderUI;
 	import com.kurst.swfrender.services.render.events.ContentLoaderEvent;
 	import com.kurst.swfrender.services.render.utils.SWFContentLoader;
-
 	import flash.display.DisplayObject;
-
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
@@ -38,6 +36,7 @@ package
 	import flash.filesystem.File;
 	import flash.net.FileFilter;
 
+	[SWF(backgroundColor="#444444", frameRate="30", width="800", height="600")]
 	public class Main extends Sprite
 	{
 
@@ -48,6 +47,7 @@ package
 		private var file        : File = new File();
 		private var swfLoader   : SWFContentLoader = new SWFContentLoader();
 		private var content     : DisplayObject;
+
 		//------------------------------------------------------------------------------------------------------------------------------
 
 		/**
@@ -75,7 +75,7 @@ package
 		//------------------------------------------------------------------------------------------------------------------------------
 
 		/**
-		 *
+		 * Content Error ( Possibly Scripting in Loaded SWF)
 		 * @param e
 		 */
 		private function onSWFContentError( e : ContentLoaderEvent ) : void
@@ -83,7 +83,7 @@ package
 			trace('onSWFContentError');
 		}
 		/**
-		 *
+		 * Error loading the SWF
 		 * @param e
 		 */
 		private function onSWFContentLoadError( e : ContentLoaderEvent ) : void
@@ -91,7 +91,7 @@ package
 			trace('onSWFContentLoadError');
 		}
 		/**
-		 *
+		 * SWF Successfully loaded
 		 * @param e
 		 */
 		private function onSWFLoaded( e : ContentLoaderEvent ) : void
@@ -103,11 +103,12 @@ package
 				content = null;
 			}
 
-			content = e.content;
+			stage.frameRate     = ui.fps.value;
+			content             = e.content;
 			container.addChild( content );
 		}
 		/**
-		 *
+		 * File selected
 		 * @param e
 		 */
 		private function onFileSelected( e : Event ) : void

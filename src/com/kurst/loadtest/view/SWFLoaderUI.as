@@ -2,7 +2,9 @@
 package com.kurst.loadtest.view
 {
 	import com.bit101.components.CheckBox;
+	import com.bit101.components.NumericStepper;
 	import com.bit101.components.PushButton;
+	import com.bit101.components.Style;
 	import com.bit101.utils.MinimalConfigurator;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -15,6 +17,7 @@ package com.kurst.loadtest.view
 		public var loadButton       : PushButton;
 		public var unloadButton     : PushButton;
 		public var loadIntoContext  : CheckBox;
+		public var fps              : NumericStepper;
 
 		//---------------------------------------------------------------------------------------------
 
@@ -28,6 +31,10 @@ package com.kurst.loadtest.view
 													<CheckBox id='use_app_context_chk' label='Use app context'/>
 													<PushButton id='load_btn' label='Load SWF' />
 													<PushButton id='unload_btn' label='UNLoad SWF' />
+													<HBox spacing='10'>
+														<Label text='FPS'/>
+														<NumericStepper id='fpsStepper' value='25'/>
+													</HBox>
 												</VBox>
 											</Window>
 										</comps>;
@@ -36,6 +43,8 @@ package com.kurst.loadtest.view
 
 		public function SWFLoaderUI()
 		{
+
+			Style.setStyle( Style.DARK );
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage, false, 0, true);
 		}
 
@@ -44,11 +53,10 @@ package com.kurst.loadtest.view
 			config = new MinimalConfigurator(this);
 			config.parseXML(mainLayout);
 
+			fps             = config.getCompById('fpsStepper') as NumericStepper;
 			loadButton      = config.getCompById('load_btn') as PushButton;
 			unloadButton    = config.getCompById('unload_btn') as PushButton;
 			loadIntoContext = config.getCompById('use_app_context_chk') as CheckBox;
-
-
 		}
 	}
 }
