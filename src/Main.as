@@ -68,6 +68,7 @@ package
 
 			ui.loadButton.addEventListener( MouseEvent.CLICK, onClickLoadButton )
 			ui.unloadButton.addEventListener( MouseEvent.CLICK, onClickUnLoadButton )
+			ui.loadURLBtn.addEventListener( MouseEvent.CLICK, onClickLoadURLButton )
 
 			file.addEventListener(Event.SELECT, onFileSelected , false, 0, true);
 		}
@@ -97,12 +98,14 @@ package
 		private function onSWFLoaded( e : ContentLoaderEvent ) : void
 		{
 
+			// If there is loaded SWF content - unload it
 			if ( content )
 			{
 				container.removeChild( content );
 				content = null;
 			}
 
+			// Add the new loaded content
 			stage.frameRate     = ui.fps.value;
 			content             = e.content;
 			container.addChild( content );
@@ -113,10 +116,37 @@ package
 		 */
 		private function onFileSelected( e : Event ) : void
 		{
-
 			var d : File = e.currentTarget as File;
-			swfLoader.disposeContent();
-			swfLoader.loadContentAsBytes( d.url , ui.loadIntoContext.selected );
+			swfLoader.disposeContent(); // dispose any loaded content
+			swfLoader.loadSWFAsBytes( d.url , ui.loadIntoContext.selected  , ui.urlParamsInput.text ); // load new SWF
+		}
+		/**
+		 *
+		 * @param e
+		 */
+		private function onClickLoadURLButton( e : Event ) : void
+		{
+
+			var url                 : String = ui.url.text; // Full url to SWF file
+			var queryArgumentsPos   : int       = url.indexOf( '?'); // Check for query string vars
+			var flashVars           : String = ''; // Flash variables ( Extracted URL parameters )
+
+
+			if ( queryArgumentsPos != -1 ) // Strip query arguments if there are any and assign to flash vars
+			{
+				flashVars = url.substr( queryArgumentsPos + 1 , url.length ); // Assign URL params to flash vars
+				url       = url.substr( 0 , queryArgumentsPos); // Get url without query string vars
+			}
+
+			if (  ui.loadIntoContext.selected )
+			{
+				swfLoader.loadSWFAsBytes( url , true , flashVars ); // Load into application context ( Note: Flash vars / URL params will not work )
+			}
+			else
+			{
+				swfLoader.loadSWFURL( url , flashVars ); // Load SWF
+			}
+
 		}
 		/**
 		 * Click Load Button
